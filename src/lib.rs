@@ -107,7 +107,7 @@ impl PixelRing {
         let request_type = request_type(Direction::Out, RequestType::Vendor, Recipient::Device);
         let request = 0;
         let value = cmd.into();
-        let index = 0x1c;
+        let index = 0x1c; // interface ?
         let timeout = Duration::from_secs(1);
 
         self.handle
