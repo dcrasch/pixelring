@@ -103,10 +103,6 @@ impl PixelRing {
         self.write_command(Command::Show, data)
     }
 
-    pub fn set_brightness(&self, brightness: u8) -> Result<(), Error> {
-        self.write_command(Command::Brightness, &[brightness])
-    }
-
     fn write_command(&self, cmd: Command, buf: &[u8]) -> Result<(), Error> {
         let request_type = request_type(Direction::Out, RequestType::Vendor, Recipient::Device);
         let request = 0;
@@ -118,5 +114,25 @@ impl PixelRing {
             .write_control(request_type, request, value, index, buf, timeout)?;
 
         Ok(())
+    }
+}
+
+pub trait Brightness {
+    fn set_brightness(&self, brightness: u8) -> Result<(), Error>;
+}
+
+impl Brightness for PixelRing {
+    fn set_brightness(&self, brightness: u8) -> Result<(), Error> {
+        self.write_command(Command::Brightness, &[brightness])
+    }
+}
+
+pub trait Volume {
+    fn set_volume(&self, volume: u8) -> Result<(), Error>;
+}
+
+impl Volume for PixelRing {
+    fn set_volume(&self, volume: u8) -> Result<(), Error> {
+        self.write_command(Command::Volume, &[volume])
     }
 }
