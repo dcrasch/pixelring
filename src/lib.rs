@@ -41,7 +41,7 @@ impl From<rusb::Error> for Error {
 
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
@@ -67,7 +67,7 @@ impl PixelRing {
 
             if desc.vendor_id() == PIXELRING_USB_VID && desc.product_id() == PIXELRING_USB_PID {
                 match device.open() {
-                    Ok(handle) => return Some(PixelRing { handle: handle }),
+                    Ok(handle) => return Some(PixelRing { handle }),
                     Err(_) => continue,
                 }
             }
@@ -76,38 +76,38 @@ impl PixelRing {
     }
 
     pub fn trace(&self) -> Result<(), Error> {
-        self.write(Command::Trace, &[0])
+        self.write_command(Command::Trace, &[0])
     }
 
     pub fn mono(&self, r: u8, g: u8, b: u8) -> Result<(), Error> {
-        self.write(Command::Mono, &[r, g, b, 0])
+        self.write_command(Command::Mono, &[r, g, b, 0])
     }
 
     pub fn listen(&self) -> Result<(), Error> {
-        self.write(Command::Listen, &[0])
+        self.write_command(Command::Listen, &[0])
     }
 
     pub fn speak(&self) -> Result<(), Error> {
-        self.write(Command::Speak, &[0])
+        self.write_command(Command::Speak, &[0])
     }
 
     pub fn think(&self) -> Result<(), Error> {
-        self.write(Command::Think, &[0])
+        self.write_command(Command::Think, &[0])
     }
 
     pub fn spin(&self) -> Result<(), Error> {
-        self.write(Command::Spin, &[0])
+        self.write_command(Command::Spin, &[0])
     }
 
     pub fn show(&self, data: &[u8]) -> Result<(), Error> {
-        self.write(Command::Show, data)
+        self.write_command(Command::Show, data)
     }
 
     pub fn set_brightness(&self, brightness: u8) -> Result<(), Error> {
-        self.write(Command::Brightness, &[brightness])
+        self.write_command(Command::Brightness, &[brightness])
     }
 
-    fn write(&self, cmd: Command, buf: &[u8]) -> Result<(), Error> {
+    fn write_command(&self, cmd: Command, buf: &[u8]) -> Result<(), Error> {
         let request_type = request_type(Direction::Out, RequestType::Vendor, Recipient::Device);
         let request = 0;
         let value = cmd.into();
