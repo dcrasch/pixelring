@@ -103,8 +103,8 @@ impl PixelRing {
         self.write(Command::Show, data)
     }
 
-    pub set_brightness(&self, brightness:u8) -> Result<(),Error> {
-	self.write(Command::Brightness, &[brightness])
+    pub fn set_brightness(&self, brightness: u8) -> Result<(), Error> {
+        self.write(Command::Brightness, &[brightness])
     }
 
     fn write(&self, cmd: Command, buf: &[u8]) -> Result<(), Error> {
